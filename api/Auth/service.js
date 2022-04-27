@@ -1,8 +1,5 @@
 const mongoose = require('mongoose');
-const userIndex = require('../Users/index');
-const surveyIndex = require('../Survey/index');
-const locationIndex = require('../Location/index');
-const utils = require('../System/utils/datetime');
+const userIndex = require('../User/index');
 
 const { ObjectId } = mongoose.Types;
 
@@ -112,115 +109,9 @@ const updateUserService = async(tenantId, pathParams, params) => {
     return result;
 };
 
-const viewSurveyService = async(tenantId, params) => {
-    const surveyModel = await surveyIndex.getModel(tenantId);
-    const list = await surveyModel.aggregate(
-        [{
-            $match: {
-                _id: {
-                    $eq: ObjectId(params.survey_id.toString()),
-                },
-            },
-        },
-        {
-            $project: {
-                _id: 1,
-                name: 1,
-                description: 1,
-                theme: 1,
-                data: 1,
-            },
-        },
-        ],
-    );
-    return list[0];
-};
-
-const locationDetailService = async(tenantId, params) => {
-    const locationModel = await locationIndex.getModel(tenantId);
-    const list = await locationModel.aggregate(
-        [{
-            $match: {
-                _id: {
-                    $eq: ObjectId(params.location_id.toString()),
-                },
-            },
-        },
-        {
-            $sort: {
-                name: 1,
-            },
-        },
-        {
-            $lookup: {
-                from: 'surveys',
-                localField: 'survey_id',
-                foreignField: '_id',
-                as: 'survey_details',
-            },
-        },
-        {
-            $unwind: {
-                path: '$survey_details',
-                preserveNullAndEmptyArrays: true,
-            },
-        },
-        {
-            $project: {
-                _id: 1,
-                email_subject: 1,
-                email_body: 1,
-                location_name: {
-                    $cond: ['$name', '$name', 'N/A'],
-                },
-                allow_preview: {
-                    $cond: ['$allow_preview', '$allow_preview', false],
-                },
-                allow_email: {
-                    $cond: ['$allow_email', '$allow_email', false],
-                },
-                allow_ack_email: {
-                    $cond: ['$allow_ack_email', '$allow_ack_email', false],
-                },
-                logo_url: {
-                    $cond: ['$logo_url', '$logo_url', 'N/A'],
-                },
-                address: {
-                    $cond: ['$address', '$address', 'N/A'],
-                },
-                qr_description: {
-                    $cond: ['$qr_description', '$qr_description', 'N/A'],
-                },
-                latlong: {
-                    $cond: ['$latlong', '$latlong', 'N/A'],
-                },
-                zoom: {
-                    $cond: ['$zoom', '$zoom', 'N/A'],
-                },
-                survey_id: 1,
-                survey_name: {
-                    $cond: ['$survey_details.name', '$survey_details.name', 'N/A'],
-                },
-                status: 1,
-                created_by: 1,
-                updated_by: 1,
-                visit_date: utils.getFormattedDatetime('$createdAt'),
-                visit_time: { $dateToString: { format: '%H:%M:%S', date: '$createdAt', timezone: 'Asia/Singapore' } },
-                preview_message: {
-                    $cond: ['$preview_message', '$preview_message', 'N/A'],
-                },
-            },
-        },
-        ],
-    );
-    return list;
-};
-
 module.exports = {
     createUserService,
     getUserDetailService,
     updateUserService,
     checkUserExists,
-    viewSurveyService,
-    locationDetailService,
 };

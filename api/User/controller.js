@@ -1,14 +1,10 @@
 const boom = require('@hapi/boom');
 const mongoose = require('mongoose');
 const isEmpty = require('lodash.isempty');
-const authenticator = require('authenticator');
-const { google } = require('googleapis');
 const service = require('./service');
 const dbService = require('../../system/db/dbService');
-const firebaseApi = require('../../system/lib/firebase/index');
 const stringConfig = require('../../system/utils/config');
 const jwtAuth = require('../../system/utils/jwt-auth');
-const aws = require('../../system/lib/aws/index');
 // const sendMail = require('../../system/sendmail/index');
 // const configController = require('../Config/controller');
 // const utilsChecks = require('../../system/utils/checks');4
@@ -90,9 +86,6 @@ const removeProfileImage = async(pathParams) => {
         photoUrl: null,
         storageType: 1,
     };
-    if (user.storageType === '2' && user.photoUrl) {
-        await aws.deleteFileURL(user.photoUrl);
-    }
     const updateDetails = await dbService.updateOneService('User', getUserParams, updateParams);
     const result = {
         status: 200,
@@ -140,7 +133,6 @@ const updatePassword = async(params, bodyParams) => {
     if (userDetail.providerType.indexOf('email') === -1) {
         throw boom.badRequest('Password Will Reset for Email Signed IN User Only.');
     }
-    await firebaseApi.resetUserPassword(userDetail.firebaseUid, bodyParams.newPassword);
     const result = {
         status: 200,
         message: 'Password Reset Done Successfully',
