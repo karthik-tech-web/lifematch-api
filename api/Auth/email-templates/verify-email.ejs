@@ -1,0 +1,78 @@
+<html>
+<head>
+    <style type="text/css">
+        * {
+            font-family: Roboto;
+        }
+		
+		.row {
+			background: #FFFFFF;
+		}
+		
+		.content {
+			width: 600px;
+			margin: 0 auto;
+			background: #E5E5E5;
+			padding: 20px;
+		}
+
+        .img-size {
+            margin: 0 auto;
+    		width: 100px;
+        }
+
+        .text-left {
+            text-align: left;
+            margin-top: 1rem;
+        }
+        
+        .button-click{
+              color: white;
+              margin-top: 2rem;
+              width: 13rem;
+              height: 3rem;
+              background: #0D7393;
+              box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+              border-radius: 50px;
+              outline: none;
+              border: none;
+              cursor: pointer;
+        }
+		a {
+			text-decoration: none;
+			color:#FFFFFF;
+			cursor: pointer;
+		}
+    </style>
+</head>
+<body>
+    <div class="row">
+		<div class="content">
+			<div class="img-size">
+				<img src="<%- tempdata.logoPath -%>" height="100" width="100" />				
+			</div>
+			<div style="clear: both;"></div>
+			<div>
+				<div class="text-left">Hello <%- tempdata.name -%>,</div>
+				<div class="text-left">
+					Thank you for signing up for <%- tempdata.appName -%>
+				</div>
+				<div class="text-left">
+					Please verify your account by clicking on the verification button.
+				</div>
+				<div class="text-left">
+					Alternatively, you can also copy and paste the link below in your browser's address bar.
+				</div>
+				 <div style="text-align: center;">
+					<a href="<%- tempdata.verifyUrl -%>"><span class="button-click">Verify Email </span></a>
+				 </div>
+				<div class="text-left">Verification link:</div>
+				 <div><a href="<%- tempdata.verifyUrl -%>" style="color:blue"><%- tempdata.verifyUrl -%></a></div>
+				 <div class="text-left">We hope you enjoy using <%- tempdata.appName -%>.</div>
+				 <div class="text-left">Thanks and Regards,</div>
+				 <div class="text-left"><%- tempdata.appName -%> Team</div>
+			</div>
+		</div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+{
+    "apps": [{
+        "name": "gigavus",
+        "script": "./bin/www",
+        "instances": -1,
+        "exec_mode": "cluster",
+        "merge_logs": true,
+        "watch": false
+    }]
+}

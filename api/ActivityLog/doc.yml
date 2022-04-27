@@ -1,0 +1,126 @@
+tags:
+  name: Activity Log
+  description: Activity Log Management
+
+components:
+   schemas:
+     ActivityLog:
+       type: object
+       properties:
+         _id:
+           type: string
+           format: ObjectId
+         logModel:
+           type: string
+           description: modelname related to log
+         logType:
+           type: string
+           description: logType
+         userId:
+           type: string
+           description: userId
+           $ref: '#/components/schemas/User'
+         logModelId:
+           type: string
+           description: logModelId
+           $ref: ['#/components/schemas/User', '#/components/schemas/Post']
+         createdAt:
+           type: string
+           format: date-time
+           description: Record created date time
+         updatedAt:
+           type: string
+           format: date-time
+           description: Record last updated date time
+       example:
+          _id: 61fb8c920d9191b048ce563c
+          logModel: post
+          logType: like
+          userId: 61fb99c4b25f50001a834efd
+          logModelId: 61c30ba30db86c001beaf395
+          createdAt: '2022-02-03T08:04:34.971+00:00'
+          updatedAt: '2022-02-03T08:04:34.971+00:00'
+
+paths:
+  /activity-log:
+    post:
+      tags:
+        - Activity Log
+      summary: add Activity Log
+      description: add Activity Log
+      produces:
+        - application/json
+      requestBody:
+        description: Add a Activity Log
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              logModel:
+                description: logModel
+                in: body
+                required: true
+                type: string
+                example: post
+              logType:
+                description: logType
+                in: body
+                type: string
+                example: post
+              logModelId:
+                description: logModelId
+                in: body
+                type: string
+                example: 61d6c791c68df8002177381e
+              userId:
+                description: userId
+                in: body
+                required: true
+                type: string
+                example: 61c30ba30db86c001beaf395
+      responses:
+        200:
+          description: Activity Log added Successfully  
+        400:
+          description: Something went wrong. Please try again. | Activity Already Exist.
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /activity-log/{userId}/list:
+    get:
+      tags:
+        - Activity Log
+      summary: ActivityLog List
+      description: ActivityLog List
+      parameters:
+        - name: userId
+          description: userId
+          in: path
+          required: true
+          example: 61c30ba30db86c001beaf395
+        - name: limit
+          description: limit
+          in: query
+          required: true
+          example: 10
+          type: number
+        - name: offset
+          description: offset
+          in: query
+          required: true
+          example: 0
+          type: number
+      responses:
+        200:
+          description: Activity List  
+        400:
+          description: Something went wrong. Please try again.  
+        404:
+          description: No Activity Found.
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []

@@ -1,0 +1,75 @@
+tags:
+  name: Report
+  description: Report Management
+
+paths:
+  /report:
+    get:
+      tags:
+        - Report
+      summary: Report List
+      description: Report List
+      produces:
+        - application/json
+      parameters:
+        - name: reportType
+          description: type
+          in: query
+          required: true
+          type: number
+          example: 1
+      responses:
+        200:
+          description: Report List
+        400:
+          description: Something went wrong. Please try again.
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+
+  /report/send-report:
+    post:
+      tags:
+        - Report
+      summary: Send Report
+      description: Send Report
+      produces:
+        - application/json
+      requestBody:
+        description: Send Report
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              reporterId:
+                description: reporterId
+                in: body
+                required: true
+                type: string
+                example: 61b720e69d744b669826b583
+              reportedUserId:
+                description: reportedUserId
+                in: body
+                required: true
+                type: string
+                example: 61c30ba30db86c001beaf395
+              reportType:
+                description: reportType
+                in: body
+                required: true
+                type: number
+                example: 1
+      responses:
+        200:
+          description: User has been Reported Succesfully  
+        400:
+          description: Something went wrong. Please try again.  
+        404:
+          description: Invalid Reporter Id | Invalid Uploader Id 
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []

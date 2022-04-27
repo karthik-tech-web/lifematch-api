@@ -1,0 +1,151 @@
+tags:
+  name: Payment
+  description: Payment management
+
+components:
+   schemas:
+     Payment:
+       type: object
+       properties:
+         _id:
+           type: string
+           format: ObjectId
+           description: Id
+         paymentMethod:
+           type: string
+           description: paymentMethod
+         paymentGateway:
+           type: string
+           description: paymentGateway
+         currency:
+           type: string
+           description: currency
+         amount:
+           type: Number
+           description: amount
+         productId:
+           type: string
+           format: ObjectId
+           $ref: '#/components/schemas/Post'
+         orderId:
+           type: string
+           format: ObjectId
+           $ref: '#/components/schemas/Order'
+         userId:
+           type: string
+           format: ObjectId
+           $ref: '#/components/schemas/User'
+         userIp:
+           type: string
+           description: userIp
+         status:
+           type: number
+         paymentStatus:
+           type: number
+       example:
+          _id: 6204fefbe6cf07c50c28e061
+          orderId: 6204ddb79fd7f6a08c2b8fce
+          productId: 62038c3d403cc0001475b471
+          userId: 61b720e69d744b669826b583
+          paymentGateway: '1'
+          userIp: null
+          currency: ZAR
+          amount: 90
+          paymentStatus: 1
+          status: 1
+          createdAt: '2021-12-13T10:31:02.583+00:00'
+          updatedAt: '2021-12-13T10:31:02.583+00:00'
+
+paths:
+  /payment:
+    post:
+      tags:
+        - Payment
+      summary: Payment
+      description: Create Payment
+      produces:
+        - application/json
+      requestBody:
+        description: Create Payment
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              orderId:
+                description: orderId
+                in: body
+                required: true
+                type: string
+              userId:
+                description: userId
+                in: body
+                required: true
+                type: string
+                example: 61b720e69d744b669826b583
+              paymentGateway:
+                description: discountType
+                in: body
+                type: string
+                example: "1"
+      responses:
+        200:
+          description: Payment Initiated Successfully 
+        400:
+          description: Something went wrong. Please try again. | Invalid user | Invalid UserId to Access Order | Invalid Order to Process Payment
+        404:
+          description: Invalid Order Id. | Invalid User Id
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+    put:
+      tags:
+        - Payment
+      summary: update Payment
+      description: update Payment
+      produces:
+        - application/json
+      requestBody:
+        description: update Payment
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              gatewayMethod:
+                description: gatewayMethod
+                in: body
+                required: true
+                type: string
+              paymentId:
+                description: paymentId
+                in: body
+                required: true
+                type: string
+              payerId:
+                description: payerId
+                in: body
+                type: string
+              paymentMethod:
+                description: paymentMethod
+                in: body
+                type: string
+              userId:
+                description: userId
+                in: body
+                type: string
+      responses:
+        200:
+          description: Payment Updated Successfully
+        400:
+          description: Something went wrong. Please try again.
+        404:
+          description: Invalid PaymentId
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+

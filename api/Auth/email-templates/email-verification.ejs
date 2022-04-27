@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+<style>
+@import url('https://fonts.googleapis.com/css?family=Open+Sans&display=swap');
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+    
+ * {
+        font-family: 'Open Sans', sans-serif;
+      }
+
+td, th {
+padding: 15px !important;
+  text-align: left;
+  padding: 8px;
+    font-size: 16px;
+}
+tr:nth-child(even) {
+ 
+}
+#button-style{
+    color: #ffffff;
+    margin: 2rem;
+    font-size: 19px;
+    background-color: #3067FF;
+    border-radius: 10px;
+    text-decoration: none;
+    padding: 11px;
+    cursor: pointer;
+}
+
+@media  (max-width: 720px) {
+#button-style{
+   margin-left: none;
+   padding: none;
+}
+}
+</style>
+</head>
+<body style="margin-top: 1rem;">
+
+<div style="justify-content: center;
+display: table;
+margin-right: auto;
+margin-left: auto;
+">
+
+    <div style="line-height: 27px;     max-width: 500px; margin: 80px;">
+        <div style="text-align: center;">
+            <img style="height: 7rem; margin-top: 1rem;" src="https://dev.noqnoq.app/assets/logo/img/Logo.png">
+        </div>
+        <p class="e_sendence">Hello,<br/></p>
+        <p class="e_sendence">Thank you for signing up.<br/></p>
+        <p class="e_sendence">Please verify your account by clicking on the verification button within the next 12 hours.<br/></p>
+        <p class="e_sendence">Alternatively, you can also copy and paste the link below in your browser's address bar.<br/></p>
+      <div style="text-align: center;">
+        <a href="<%- tempdata.verify_url -%>" > <button id="button-style">Verify Email</button></a>
+      </div> 
+        Verification link:<br/>
+        <a  style="color: #3067FF;" href="<%- tempdata.verify_url -%>"><%- tempdata.verify_url -%></a>
+    </div>
+</div>
+
+
+</body>
+</html>

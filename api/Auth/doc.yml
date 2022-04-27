@@ -1,0 +1,221 @@
+tags:
+  name: Auth
+  description: Authentication Management
+
+paths:
+  /auth/signin:
+    post:
+      tags:
+        - Auth
+      summary: User SignUp
+      description: A new user signup
+      produces:
+        - application/json
+      responses:
+        200:
+          description: User Account Linked Successfully | User Created Successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+        400:
+          description: Something went wrong. Please try again
+        404:
+          description: User not Found
+        409:
+          description: User already exists
+        500:
+          description: Internal Server Error
+      security:
+        - BearerAuth: []
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: User login.
+      description: User login
+      responses:
+        200:
+          description: User Login successfully
+        400:
+          description: Something went wrong. Please try again
+        404:
+          description: User not Found
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /auth/logout/{firebaseId}:
+    post:
+      tags:
+        - Auth
+      summary: User logout.
+      description: User logout
+      produces:
+        - application/json
+      parameters:
+        - name: firebaseId
+          description: firebase Id of the user
+          in: path
+          required: true
+          example: 60b0ae218a595c0011b13f78
+          type: string
+      responses:
+        200:
+          description: Logout Successfully
+        400:
+          description: User is not Logged In
+        404:
+          description: User not Found
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /auth/forget-password-email:
+    post:
+      tags:
+        - Auth
+      summary: Forget PassWord Email
+      produces:
+        - application/json
+      requestBody:
+        description: Forget PassWord Email 
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: User Email
+                in: body
+                required: true
+                type: string
+                example: test@gmail.com
+      responses:
+        200:
+          description: Mail sent successfully
+        400:
+          description: Something went wrong. Please try again
+        404:
+          description: Forget Password Will send for Email Signed IN User Only | Invalid User Email
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /auth/forget-password-reset:
+    put:
+      tags:
+        - Auth
+      summary: Forget PassWord Reset
+      produces:
+        - application/json
+      requestBody:
+        description: PassWord Reset Params
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: user email
+                in: body
+                type: string
+                required: true
+                example: test@gmail.com
+              newPassword:
+                description: newPassword
+                in: body
+                required: true
+                type: string
+                example: test@123
+              confirmPassword:
+                description: confirmPassword
+                in: body
+                required: true
+                type: string
+                example: test@123
+      responses:
+        200:
+          description: Password Reset Done Successfully
+        400:
+          description: Password Will Reset for Email Signed IN User Only | Enter Strong Password | Password Does not Match
+        404:
+          description: Invalid User | Invalid User Email
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /auth/twofactor-authentication:
+    post:
+      tags:
+        - Auth
+      summary: 2FA Check
+      produces:
+        - application/json
+      requestBody:
+        description: 2FA Check Params
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: user email
+                in: body
+                type: string
+                required: true
+              authCode:
+                description: authCode
+                in: body
+                required: true
+                type: string
+      responses:
+        200:
+          description: Authenticated Successfully
+        400:
+          description: Something went wrong. Please try again
+        401:
+          description: Authentication Failed
+        404:
+          description: Invalid User
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+  
+  /auth/verify-email:
+    post:
+      tags:
+        - Auth
+      summary: Verify Email
+      produces:
+        - application/json
+      requestBody:
+        description: Verify Email 
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: User Email
+                in: body
+                required: true
+                type: string
+                example: test@gmail.com
+      responses:
+        200:
+          description: Mail sent successfully
+        400:
+          description: Something went wrong. Please try again
+        404:
+          description: Email Already Verified | Invalid User Email
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []

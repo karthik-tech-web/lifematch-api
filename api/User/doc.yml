@@ -1,0 +1,529 @@
+tags:
+  name: User
+  description: User Management
+
+components:
+   schemas:
+     User:
+       type: object
+       required:
+         - _id
+         - firebaseUid
+         - email
+         - status
+         - createdBy
+         - updatedBy
+       properties:
+         _id:
+           type: string
+           format: ObjectId
+           description: User Id
+         firebaseUid:
+           type: string
+           format: string
+           description: Firebase User Id of the User.
+         email:
+           type: string
+           format: email
+           description: Email for the user, needs to be unique.
+         status:
+           type: string
+           format: Number
+           description: inactive (0), active (1)
+         createdBy:
+           type: string
+           format: ObjectId
+           description: Id of the user who creates the record
+           $ref: '#/components/schemas/User'
+         updated_by:
+           type: string
+           format: ObjectId
+           description: Id of the user who updates the record last
+           $ref: '#/components/schemas/User'
+         createdAt:
+           type: string
+           format: date-time
+           description: Record created date time
+         updatedAt:
+           type: string
+           format: date-time
+           description: Record last updated date time
+       example:
+          _id: 5f8e8aec08f60970124cc24f
+          firebaseUid: N7vQTJyIdbNoHEKUDP5LYbhy95f2
+          email: fake@email.com
+          status: 1
+          createdBy: 5f8e8aec08f60970124cc24f
+          updatedBy: 5f8e8aec08f60970124cc24f
+
+paths:
+  /user/{data}/{type}:
+    get:
+      tags:
+        - User
+      summary: User Details
+      description: Get User Details
+      produces:
+        - application/json
+      parameters:
+        - name: data
+          description: unique id or firebase id
+          in: path
+          required: true
+          type: string
+          example: UK6apSwR9lMZ3IGIu8mtQtzBtXT2
+        - name: type
+          description: type to identify Id
+          in: path
+          required: true
+          type: number
+          example: 2
+      responses:
+        200:
+          description: User Detail
+        404:
+          description: No User Found
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/profile-details/{profileId}:
+    get:
+      tags:
+        - User
+      summary: get profile details
+      produces:
+        - application/json
+      parameters:
+        - name: profileId
+          description: profileId
+          in: path
+          required: true
+          type: string
+          example: 61c30ba30db86c001beaf395
+        - name: loggedInUserId
+          description: profileId
+          in: query
+          required: true
+          type: string
+          example: 61c30ba30db86c001beaf395
+      responses:
+        200:
+          description: User Detail
+        404:
+          description: No User Found
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/{userId}:
+    put:
+      tags:
+        - User
+      summary: update User details
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+          example: 61c30ba30db86c001beaf395
+      requestBody:
+        description: Add Category
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              displayName:
+                description: displayName of user
+                in: body
+                type: string
+                example: test
+              firstName:
+                description: userId of user
+                in: body
+                required: true
+                type: string
+                example: test
+              middleName:
+                description: middleName of user
+                in: body
+                required: true
+                type: string
+                example: test
+              lastName:
+                description: lastName of user
+                in: body
+                type: string
+                example: test
+              country:
+                description: country of user
+                in: body
+                required: true
+                type: string
+                example: test
+              timeZone:
+                description: timeZone of user
+                in: body
+                required: true
+                type: string
+                example: test
+              currency:
+                description: currency of user
+                in: body
+                required: true
+                type: string
+                example: test
+              about:
+                description: about user
+                in: body
+                required: true
+                type: string
+                example: test
+      responses:
+        200:
+          description: User updated Successfully
+        404:
+          description: User does not exist
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/profile-image/{userId}:
+    put:
+      tags:
+        - User
+      summary: User Profile Upload
+      description: User Profile Upload
+      # produces:
+      #   - multipart/form-data
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                image:
+                  type: file
+      responses:
+        200:
+          description: Profile Image updated Successfully  
+        400:
+          description: Something went wrong. Please try again. 
+        404:
+          description: User does not exist.
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+    delete:
+      tags:
+        - User
+      summary: User Profile delete
+      description: User Profile delete
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Profile Image Removed Successfully  
+        400:
+          description: Something went wrong. Please try again. 
+        404:
+          description: User does not exist.
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/reset-password/{userId}:
+    put:
+      tags:
+        - User
+      summary: PassWord Reset
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+      requestBody:
+        description: PassWord Reset Params
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              type:
+                description: type
+                in: body
+                type: number
+                required: true
+                example: 1
+              newPassword:
+                description: newPassword
+                in: body
+                required: true
+                type: string
+                example: test@123
+              confirmPassword:
+                description: confirmPassword
+                in: body
+                required: true
+                type: string
+                example: test@123
+      responses:
+        200:
+          description: Password Reset Done Successfully
+        400:
+          description: Password Will Reset for Email Signed IN User Only | Enter Strong Password | Password Does not Match
+        404:
+          description: Invalid User | Invalid User Email
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/twofactor-auth/{userId}:
+    put:
+      tags:
+        - User
+      summary: Get 2FA
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Two Factor Authentication Generated Successfully
+        404:
+          description: Invalid User
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/twofactor-enable/{userId}:
+    put:
+      tags:
+        - User
+      summary: 2FA Enable
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+      requestBody:
+        description: 2FA Enable Params
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              authCode:
+                description: authorization code
+                in: body
+                type: string
+                required: true
+              authKey:
+                description: authorization key
+                in: body
+                required: true
+                type: string
+      responses:
+        200:
+          description: Two Factor Authentication Enabled Successfully
+        400:
+          description: Something went wrong. Please try again
+        401:
+          description: Authentication Failed
+        404:
+          description: Invalid User
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/twofactor-disable/{userId}:
+    put:
+      tags:
+        - User
+      summary: 2FA Disable
+      produces:
+        - application/json
+      parameters:
+        - name: userId
+          description: userId of user
+          in: path
+          required: true
+          type: string
+      requestBody:
+        description: 2FA Disable
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              authCode:
+                description: authorization code
+                in: body
+                type: string
+                required: true
+      responses:
+        200:
+          description: Two Factor Authentication disabled Successfully
+        400:
+          description: Something went wrong. Please try again
+        401:
+          description: Authentication Failed
+        404:
+          description: Invalid User
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/google/generate-google-auth:
+    get:
+      tags:
+        - User
+      summary: generate Google Auth
+      produces:
+        - application/json
+      parameters:
+        - name: redirectUrl
+          description: redirectUrl No 1.default others.local or required url
+          in: query
+          type: number
+        - name: isCalenderOnly
+          description: get scope type
+          in: query
+          type: boolean
+        - name: stateData
+          description: optional required data
+          in: query
+          type: string
+      responses:
+        200:
+          description: Google Link Url generated Successfully
+        400:
+          description: Something went wrong. Please try again
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/google/link-account:
+    put:
+      tags:
+        - User
+      summary: link google account
+      produces:
+        - application/json
+      parameters:
+        - name: redirectUrl
+          description: redirectUrl No 1.default others.local or required url
+          in: query
+          type: number
+        - name: isCalenderOnly
+          description: get scope type
+          in: query
+          type: boolean
+      requestBody:
+        description: link google account
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              authCode:
+                description: authorization code
+                in: body
+                type: string
+                required: true
+              userId:
+                description: userId
+                in: body
+                type: string
+                required: true
+      responses:
+        200:
+          description: Google Account linked Successfully
+        400:
+          description: Something went wrong. Please try again
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+
+  /user/google/unlink-account:
+    put:
+      tags:
+        - User
+      summary: Unlink Google Account
+      produces:
+        - application/json
+      requestBody:
+        description: Unlink Google Account
+        content:
+         application/json:
+          schema:
+            type: object
+            properties:
+              userId:
+                description: userId
+                in: body
+                type: string
+                required: true
+      responses:
+        200:
+          description: Google Account Unlinked Successfully
+        400:
+          description: Something went wrong. Please try again
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+        
+  /user/chat-token:
+    get:
+      tags:
+        - User
+      summary: Get chat token
+      produces:
+        - application/json
+      responses:
+        200:
+          description: Chat Token
+        404:
+          description: User not Found.
+        500:
+          description: Internal Server Error
+      security :
+        - BearerAuth: []
+  
