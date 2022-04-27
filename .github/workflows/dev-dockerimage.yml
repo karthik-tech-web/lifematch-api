@@ -19,4 +19,4 @@ jobs:
             ls
             docker build . --file Dockerfile --tag lifematch-api-dev:1
             docker ps -q --filter "name=lifematch-api-dev-container" | grep -q . && docker stop lifematch-api-dev-container && docker rm -fv lifematch-api-dev-container
-            docker run --name lifematch-api-dev-container -e NODE_ENV=local --env-file $HOME/actions-runner/_work/lifematch-api/env.list -v $HOME/volumes/proflie-uploads:/usr/src/app/proflie-uploads -d -p 8083:8083 --restart=always lifematch-api-dev:1
+            docker run --name lifematch-api-dev-container -e NODE_ENV=local --env-file $HOME/actions-runner/_work/lifematch-api/lifematch-api/env.list -v $HOME/volumes/proflie-uploads:$HOME/actions-runner/_work/lifematch-api/lifematch-api/proflie-uploads -d -p 8083:8083 --restart=always lifematch-api-dev:1
